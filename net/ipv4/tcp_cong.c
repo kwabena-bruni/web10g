@@ -312,6 +312,8 @@ void tcp_slow_start(struct tcp_sock *tp)
 	unsigned int delta = 0;
 	u32 snd_cwnd = tp->snd_cwnd;
 
+	TCP_ESTATS_VAR_INC(tp, stack_table, SlowStart);
+
 	if (unlikely(!snd_cwnd)) {
 		pr_err_once("snd_cwnd is nul, please report this bug.\n");
 		snd_cwnd = 1U;
@@ -334,6 +336,7 @@ EXPORT_SYMBOL_GPL(tcp_slow_start);
 /* In theory this is tp->snd_cwnd += 1 / tp->snd_cwnd (or alternative w) */
 void tcp_cong_avoid_ai(struct tcp_sock *tp, u32 w)
 {
+	TCP_ESTATS_VAR_INC(tp, stack_table, CongAvoid);
 	if (tp->snd_cwnd_cnt >= w) {
 		if (tp->snd_cwnd < tp->snd_cwnd_clamp)
 			tp->snd_cwnd++;
