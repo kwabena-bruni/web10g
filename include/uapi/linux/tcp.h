@@ -112,7 +112,9 @@ enum {
 #define TCP_FASTOPEN		23	/* Enable FastOpen on listeners */
 #define TCP_TIMESTAMP		24
 #define TCP_NOTSENT_LOWAT	25	/* limit number of unsent bytes in write queue */
-
+#ifdef CONFIG_TCP_ESTATS
+#define TCP_ESTATS_CID		26
+#endif
 struct tcp_repair_opt {
 	__u32	opt_code;
 	__u32	opt_val;
@@ -186,11 +188,6 @@ struct tcp_info {
 	__u32	tcpi_rcv_space;
 
 	__u32	tcpi_total_retrans;
-
-#ifdef CONFIG_TCP_ESTATS
-	/* RFC 4898 extended stats Info */
-	__u32	tcpi_estats_cid;
-#endif
 };
 
 /* for TCP_MD5SIG socket option */

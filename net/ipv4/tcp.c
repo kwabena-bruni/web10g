@@ -2807,10 +2807,6 @@ void tcp_get_info(const struct sock *sk, struct tcp_info *info)
 	info->tcpi_rcv_space = tp->rcvq_space.space;
 
 	info->tcpi_total_retrans = tp->total_retrans;
-#ifdef CONFIG_TCP_ESTATS
-	info->tcpi_estats_cid = (tp->tcp_stats && tp->tcp_stats->tcpe_cid > 0)
-					? tp->tcp_stats->tcpe_cid : 0;
-#endif
 }
 EXPORT_SYMBOL_GPL(tcp_get_info);
 
@@ -2932,6 +2928,14 @@ static int do_tcp_getsockopt(struct sock *sk, int level,
 	case TCP_NOTSENT_LOWAT:
 		val = tp->notsent_lowat;
 		break;
+#ifdef CONFIG_TCP_ESTATS
+	case TCP_ESTATS_CID:
+		if (tp->tcp_stats != NULL)
+			val = tp->tcp_stats->tcpe_cid;
+		else
+			return -EINVAL;
+		break;
+#endif
 	default:
 		return -ENOPROTOOPT;
 	}
